@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- 注册bean -->
+    <bean id="userService" class="com.kuang.demo4.service.UserServiceImpl"/>
+    <bean id="beforeLog" class="com.kuang.demo4.BeforeLog"/>
+    <bean id="afterLog" class="com.kuang.demo4.AfterLog"/>
+    
+    <!-- 方式一：使用原生Spring API接口 -->
+    <!--aop配置,需要导入aop的约束-->
+    <!--<aop:config>-->
+        <!--&lt;!&ndash; 切入点 expression表达式  execution(需要执行的位置 * * * * *)&ndash;&gt;-->
+        <!--<aop:pointcut id="pointcut" expression="execution(* com.kuang.demo4.service.UserServiceImpl.*(..))"/>-->
+        <!--&lt;!&ndash; 执行环绕 &ndash;&gt;-->
+        <!--<aop:advisor advice-ref="beforeLog" pointcut-ref="pointcut"/>-->
+        <!--<aop:advisor advice-ref="afterLog" pointcut-ref="pointcut"/>-->
+    <!--</aop:config>-->
+
+    <!--方式二：自定义类-->
+    <!--<bean id="div" class="com.kuang.demo4.div.DivPointCut"/>-->
+    <!--<aop:config>-->
+        <!--&lt;!&ndash;自定义切面 ref: 要引用的类&ndash;&gt;-->
+        <!--<aop:aspect ref="div">-->
+            <!--&lt;!&ndash;切入点&ndash;&gt;-->
+            <!--<aop:pointcut id="point" expression="execution(* com.kuang.demo4.service.UserServiceImpl.*(..))"/>-->
+            <!--&lt;!&ndash;通知&ndash;&gt;-->
+            <!--<aop:before method="before" pointcut-ref="point"/>-->
+            <!--<aop:after method="after" pointcut-ref="point"/>-->
+        <!--</aop:aspect>-->
+    <!--</aop:config>-->
+
+
+</beans>

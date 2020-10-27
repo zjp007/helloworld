@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:p="http://www.springframework.org/schema/p"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.2.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+    <!--DataSource: 使用Spring的数据元天花了mybatis的配置 c3p0 dbcp druid
+    这里使用spring提供的JDBC:org.springframework.jdbc.datasource-->
+    <!--数据源-->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1/test?useSSL=true&amp;useUnicode=true&amp;characterEncoding=UTF-8"/>
+        <property name="username" value="rppt"/>
+        <property name="password" value="123456"/>
+    </bean>
+
+    <!-- 配置SqlSessionFactory对象 -->
+    <!--原来  显示创建SqlSessionFactory对象并使用-->
+    <!--现在  Spring托管创建-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 注入数据库连接池 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!--绑定Mybatis配置文件-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="mapperLocations" value="classpath:com/kuang/dao/*.xml"/>
+    </bean>
+
+    <!--SqlSessionTemplate:就是使用的SqlSession-->
+    <!--原来  根据SqlSessionFactory创建SqlSession-->
+    <!--现在  从Spring容器中获取SqlSessionTemplate代替SqlSession使用-->
+    <bean id="sqlsession" class="org.mybatis.spring.SqlSessionTemplate">
+        <!--没有set方法,只能使用构造器注入-->
+        <constructor-arg index="0" ref="sqlSessionFactory" />
+    </bean>
+
+
+</beans>

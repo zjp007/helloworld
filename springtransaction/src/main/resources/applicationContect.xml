@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:p="http://www.springframework.org/schema/p"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.2.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+    <import resource="spring-dao.xml"/>
+
+    <!--配置userMapper对象-->
+    <bean id="studenMapper" class="com.kuang.dao.StudentDaoImplTwo">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <!--配置声明式事务-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--<constructor-arg ref="dataSource" />-->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--集合AOP实现事务的织入-->
+    <!--配置事务的类-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <!--给那些方法配置事务-->
+        <!--配置事务的传播特性 新东西(默认 propagation="REQUIRED")-->
+        <tx:attributes>
+            <tx:method name="add" propagation="REQUIRED"/>
+            <tx:method name="deleted"/>
+            <tx:method name="update"/>
+            <tx:method name="query" read-only="true"/>  <!-- 只读 -->
+        </tx:attributes>
+    </tx:advice>
+
+    <!--配置事务切入-->
+    <aop:config>
+        <aop:pointcut id="txpointCut" expression="execution(* com.kuang.dao.*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txpointCut"/>
+    </aop:config>
+</beans>
