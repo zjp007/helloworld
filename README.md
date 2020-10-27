@@ -1,2 +1,1 @@
-# helloworld
-FirstDemo
+# Simple Spring Demo
